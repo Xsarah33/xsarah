@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>XSarah Pre-Task Plans</title>
+<meta name="theme-color" content="#d9581a">
+<meta name="description" content="Pre-task plans, permits, crew sign-on and review workflow for construction crews.">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="XSarah">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script src="/config.js"></script>
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --ink:#1c2420; --ink-2:#4a554f; --ink-3:#77827c;
+  --paper:#f4f5f1; --card:#ffffff; --line:#d9ddd6; --line-2:#e9ece6;
+  --accent:#d9581a; --accent-ink:#ffffff; --accent-soft:#fbe7dc;
+  --low:#2f7d4a; --low-bg:#e2f1e6; --med:#9a6a00; --med-bg:#fbefc9; --high:#b3261e; --high-bg:#f9dedb;
+  --focus:#1f6fd1;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#e8ebe6; --ink-2:#b3bbb5; --ink-3:#88918b;
+    --paper:#141816; --card:#1d2320; --line:#333b37; --line-2:#272e2a;
+    --accent:#f07a3c; --accent-ink:#1a0e06; --accent-soft:#3a2418;
+    --low:#7cc995; --low-bg:#1e3326; --med:#e8c15a; --med-bg:#3a3118; --high:#f28b82; --high-bg:#3d1f1c;
+    --focus:#7fb2ff;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#e8ebe6; --ink-2:#b3bbb5; --ink-3:#88918b;
+  --paper:#141816; --card:#1d2320; --line:#333b37; --line-2:#272e2a;
+  --accent:#f07a3c; --accent-ink:#1a0e06; --accent-soft:#3a2418;
+  --low:#7cc995; --low-bg:#1e3326; --med:#e8c15a; --med-bg:#3a3118; --high:#f28b82; --high-bg:#3d1f1c;
+  --focus:#7fb2ff;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.5 var(--body);padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:880px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em;text-wrap:balance;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);margin-inline:-16px;padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.mark{width:30px;height:30px;border-radius:6px;background:var(--accent);display:grid;place-items:center}
+.mark svg{width:18px;height:18px}
+.brand h1{font-size:24px;line-height:1}
+.brand small{display:block;font:500 11px/1.2 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.tabs{display:flex;gap:4px;background:var(--line-2);padding:3px;border-radius:8px}
+.tabs button{border:0;background:transparent;padding:6px 12px;border-radius:6px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.tabs button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.status{font-size:12px;color:var(--ink-3);width:100%}
+
+/* generic */
+.btn{border:1px solid var(--line);background:var(--card);padding:9px 14px;border-radius:8px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--high)}
+.btn.small{padding:5px 10px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.label{font:600 12px/1.2 var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.muted{color:var(--ink-2)}
+.mono{font-family:var(--mono);font-size:13px}
+
+/* list view */
+.listhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:20px 0 14px}
+.listhead h2{font-size:30px;margin-right:auto}
+.search{flex:1 1 220px;max-width:340px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px}
+.plans{display:grid;gap:10px}
+.plan{display:grid;grid-template-columns:1fr auto;gap:4px 16px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;text-align:left;width:100%}
+.plan:hover{border-color:var(--ink-3)}
+.plan .t{font-family:var(--display);font-size:21px;font-weight:600;line-height:1.15}
+.plan .meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--ink-2)}
+.plan .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.pill{display:inline-flex;align-items:center;gap:5px;font:600 12px/1 var(--body);padding:5px 8px;border-radius:999px;white-space:nowrap}
+.pill.low{background:var(--low-bg);color:var(--low)}
+.pill.med{background:var(--med-bg);color:var(--med)}
+.pill.high{background:var(--high-bg);color:var(--high)}
+.pill.neutral{background:var(--line-2);color:var(--ink-2)}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:28px;text-align:center;color:var(--ink-2)}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+
+/* form */
+form{display:grid;gap:18px;margin-top:20px}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.sec > header{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sec h3{font-size:22px}
+.sec > header p{margin:0;font-size:14px;color:var(--ink-3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.f{display:grid;gap:5px}
+.f input,.f select,.f textarea,.cell input,.cell textarea,.cell select{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:9px 10px}
+.f textarea{min-height:90px;resize:vertical}
+.req::after{content:" *";color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;user-select:none}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:600}
+
+/* steps */
+.steps{display:grid;gap:10px}
+.step{border:1px solid var(--line-2);border-radius:10px;padding:12px;display:grid;gap:10px;background:var(--paper)}
+.step .row1{display:flex;gap:10px;align-items:center}
+.step .num{font:600 13px var(--mono);color:var(--ink-3)}
+.step .row1 input{flex:1}
+.step .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.step .row3{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.step .row3 .cell{width:130px}
+.cell{display:grid;gap:4px}
+.cell textarea{min-height:64px;resize:vertical;background:var(--card)}
+.cell input,.cell select{background:var(--card)}
+.score{display:flex;align-items:center;gap:8px;margin-left:auto}
+@media (max-width:560px){ .step .row2{grid-template-columns:1fr} .step .row3 .cell{width:calc(50% - 5px)} .score{margin-left:0} }
+.matrixnote{font-size:13px;color:var(--ink-3);margin-top:8px}
+
+/* photos */
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ph{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper);display:grid}
+.ph img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.ph input{border:0;border-top:1px solid var(--line);padding:7px 8px;background:var(--card);font-size:14px;width:100%}
+.ph .x{justify-self:end;border:0;background:transparent;color:var(--high);font-size:13px;padding:4px 8px;cursor:pointer}
+.drop{border:1px dashed var(--ink-3);border-radius:8px;display:grid;place-items:center;text-align:center;padding:16px;min-height:120px;color:var(--ink-2);cursor:pointer;font-size:14px}
+.drop input{display:none}
+
+/* crew */
+.crew{display:grid;gap:10px}
+.member{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+@media (max-width:560px){ .member{grid-template-columns:1fr 1fr} .member .sigwrap{grid-column:1/-1} }
+.sigwrap{display:grid;gap:4px}
+.signed{display:flex;align-items:center;gap:8px}
+.signed img{height:40px;background:#fff;border-radius:4px;border:1px solid var(--line)}
+[hidden]{display:none!important}
+.sigpad{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.sigbox{background:var(--card);border-radius:12px;padding:16px;width:min(560px,100%);display:grid;gap:10px}
+.sigbox canvas{width:100%;height:180px;background:#fff;border:1px solid var(--line);border-radius:8px;touch-action:none}
+.sigbox .acts{display:flex;gap:8px;justify-content:flex-end}
+
+.formacts{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;position:sticky;bottom:0;background:var(--paper);padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.msg{font-size:14px;margin-right:auto;align-self:center}
+.msg.err{color:var(--high)}
+
+/* report */
+.report{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.rhead{padding:18px;border-bottom:3px solid var(--accent);display:grid;gap:8px}
+.rhead .id{font:500 13px var(--mono);color:var(--ink-3)}
+.rhead h2{font-size:30px;line-height:1.1}
+.rbody{padding:18px;display:grid;gap:22px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px 18px}
+.kv div{display:grid;gap:2px}
+.kv b{font-weight:600}
+.rsec h3{font-size:19px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line-2)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line-2)}
+th{font:600 12px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.rphotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.rphotos figure{margin:0;display:grid;gap:4px}
+.rphotos img{width:100%;border-radius:8px;border:1px solid var(--line)}
+.rphotos figcaption{font-size:13px;color:var(--ink-2)}
+.sigs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.sig{border:1px solid var(--line-2);border-radius:8px;padding:10px;display:grid;gap:4px}
+.sig img{height:54px;background:#fff;border-radius:4px;object-fit:contain;justify-self:start;max-width:100%}
+.sig .none{height:54px;display:grid;place-items:center;color:var(--high);font-size:13px;border:1px dashed var(--line);border-radius:4px}
+.ractions{display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--line);background:var(--paper)}
+.back{margin-top:16px}
+.permits{display:grid;gap:12px;margin-top:14px}
+.permit,.rpermit{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:14px;background:var(--paper);scroll-margin-top:90px}
+.rpermit{background:var(--card)}
+.rpermits{display:grid;gap:12px}
+.phead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.phead h4{font-family:var(--display);font-size:20px;font-weight:600;margin:0;margin-right:auto;line-height:1.15}
+.ptag{font:600 11px/1 var(--body);letter-spacing:.07em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:5px 7px;border-radius:4px}
+.permit .f input{background:var(--card)}
+.psub{display:grid;gap:6px}
+.permit .chip{background:var(--card)}
+.permit .chip[aria-pressed="true"]{background:var(--accent-soft)}
+.chain{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px}
+.chain li{display:flex;align-items:center;gap:8px;font-size:15px}
+.dot{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;font:600 13px var(--mono);background:var(--line-2);color:var(--ink-2);flex:none}
+.stages{display:grid;gap:10px}
+.stage{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:10px}
+.stage .sh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stage .sh .pill{margin-left:auto}
+.stage.done .dot{background:var(--low-bg);color:var(--low)}
+.stage.open{border-color:var(--accent);background:var(--accent-soft)}
+.stage.open .dot{background:var(--accent);color:var(--accent-ink)}
+.stage.open input,.stage.open textarea{background:var(--card)}
+.stage.wait{opacity:.75}
+.stage .cm{margin:0;font-size:14px;color:var(--ink-2);white-space:pre-wrap}
+.stage .cm.warn{color:var(--med)}
+.ssig{height:54px;background:#fff;border-radius:4px;border:1px solid var(--line);object-fit:contain;justify-self:start;max-width:100%}
+.sacts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.banner{margin-top:14px;padding:10px 12px;border-radius:8px;background:var(--med-bg);color:var(--med);font-size:14px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="top"><div class="wrap">
+  <div class="brand">
+    <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 7-7"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg></div>
+    <div><h1>XSarah</h1><small>Pre-task plans</small></div>
+  </div>
+  <div class="tabs" role="group" aria-label="View">
+    <button id="tab-list" aria-pressed="true">Plans</button>
+    <button id="tab-new" aria-pressed="false">New plan</button>
+  </div>
+  <div class="status" id="status">Connecting to shared plan log…</div>
+</div></div>
+
+<main class="wrap" id="app"></main>
+
+<div class="sigpad" id="sigpad" hidden>
+  <div class="sigbox">
+    <div><div class="label">Sign here</div><div id="signame" style="font-weight:600"></div></div>
+    <canvas id="sigcanvas" width="1000" height="360" aria-label="Signature area"></canvas>
+    <div class="acts">
+      <button class="btn ghost" id="sigclear" type="button">Clear</button>
+      <button class="btn ghost" id="sigcancel" type="button">Cancel</button>
+      <button class="btn primary" id="sigsave" type="button">Save signature</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const HAZARDS=["Excavation / trenching","Underground utilities","Overhead power lines","Heavy equipment","Struck-by / caught-between","Fall exposure (6 ft+)","Lifting / rigging","Confined space","Hot work","Electrical","Heat stress","Lightning / storms","Silica / dust","Noise","Traffic / haul roads","Chemicals / fuel","Manual lifting","Slips, trips, uneven ground"];
+const PPE=["Hard hat","Safety glasses","Hi-vis vest","Steel/comp-toe boots","Work gloves","Hearing protection","Face shield","Respirator","Fall harness","Cut-resistant gloves","Rubber boots","Sun protection"];
+/* permit types: fields = [key,label,placeholder] */
+const PERMITS=[
+ {k:"hot",name:"Hot work",fields:[["fireWatch","Fire watch (name)"],["watchAfter","Fire watch after work (min)","e.g. 60"],["extinguisher","Extinguisher type / location"],["combustibles","Combustibles cleared within 35 ft?","Yes / No / Covered"]],
+  hazards:["Fire / ignition","Sparks & slag","Burns","Welding fumes","UV / arc flash to eyes","Compressed gas cylinders","Combustibles nearby","Hidden combustibles in walls or floors"],
+  ppe:["Welding helmet / shield","Fire-resistant clothing","Welding gloves","Safety glasses","Respirator","Leather boots / spats"],def:["Welding helmet / shield","Fire-resistant clothing","Welding gloves","Safety glasses"]},
+ {k:"prcs",name:"Permit-required confined space (PRCS)",short:"PRCS",fields:[["entrySup","Entry supervisor"],["attendant","Attendant"],["entrants","Authorized entrants"],["o2","O₂ %","19.5–23.5"],["lel","LEL %","under 10"],["h2s","H₂S ppm","under 10"],["co","CO ppm","under 35"],["meter","Gas meter ID / bump tested"],["rescue","Rescue plan / service"]],
+  hazards:["Oxygen deficiency / enrichment","Toxic atmosphere (H₂S, CO)","Flammable atmosphere","Engulfment","Entrapment / converging walls","Limited entry and exit","Hazardous energy inside space","Heat inside space"],
+  ppe:["Full-body harness","Retrieval line / tripod","4-gas monitor","SCBA / supplied air","Respirator","Hard hat","Safety glasses","Chemical gloves"],def:["Full-body harness","Retrieval line / tripod","4-gas monitor"]},
+ {k:"height",name:"Elevated work / fall protection",short:"Elevated work",fields:[["height","Working height (ft)"],["system","Fall protection system","Guardrail, PFAS, net, restraint"],["anchor","Anchor point / rating"],["equip","Lift, ladder or scaffold used"],["inspected","Harness & lanyard inspected by"],["rescue","Fall rescue plan"]],
+  hazards:["Falls from height","Falling objects","Unprotected edges / openings","Ladder or scaffold failure","Aerial lift tip-over","Swing fall / clearance","Suspension trauma","High wind"],
+  ppe:["Full-body harness","Shock-absorbing lanyard","Self-retracting lifeline","Hard hat with chin strap","Tool lanyards","Safety glasses"],def:["Full-body harness","Shock-absorbing lanyard","Hard hat with chin strap","Tool lanyards"]},
+ {k:"excav",name:"Excavation / trenching",short:"Excavation",fields:[["depth","Max depth (ft)"],["soil","Soil type","A, B or C"],["protect","Protective system","Trench box, slope, shoring"],["ticket","811 ticket #"],["access","Ladder within 25 ft?","Yes / No"],["inspector","Daily inspection by (competent person)"]],
+  hazards:["Cave-in","Striking utilities","Hazardous atmosphere in trench","Water accumulation","Spoil pile / falling loads","Equipment near edge","Falls into excavation"],
+  ppe:["Hard hat","Hi-vis vest","Steel/comp-toe boots","Safety glasses","Gas monitor (over 4 ft)"],def:["Hard hat","Hi-vis vest","Steel/comp-toe boots"]},
+ {k:"loto",name:"Lockout / tagout (energy isolation)",short:"LOTO",fields:[["equipment","Equipment isolated"],["sources","Energy sources","Electrical, hydraulic, pneumatic, stored"],["locks","Lock / tag numbers"],["verified","Zero energy verified by"]],
+  hazards:["Unexpected startup","Stored energy release","Electrical shock","Hydraulic / pneumatic pressure","Gravity / suspended parts"],
+  ppe:["Personal lock & tag","Insulated gloves","Safety glasses","Voltage tester"],def:["Personal lock & tag","Safety glasses"]},
+ {k:"elec",name:"Energized electrical work",short:"Energized electrical",fields:[["voltage","Voltage"],["arc","Arc flash boundary / incident energy"],["qualified","Qualified person"],["justify","Why it can't be de-energized"]],
+  hazards:["Shock / electrocution","Arc flash / blast","Burns","Nearby energized lines"],
+  ppe:["Arc-rated clothing","Arc flash hood / face shield","Rubber insulating gloves","Class E hard hat","Insulated tools","Safety glasses"],def:["Arc-rated clothing","Rubber insulating gloves","Class E hard hat","Insulated tools"]},
+ {k:"lift",name:"Critical / crane lift",short:"Crane lift",fields:[["crane","Crane / rated capacity"],["load","Load weight (lbs)"],["pct","% of rated capacity"],["radius","Radius / boom length"],["operator","Certified operator"],["rigger","Qualified rigger"],["signal","Signal person"]],
+  hazards:["Dropped load","Crane tip-over","Struck by swing radius","Power line contact","Rigging failure","Pinch points","High wind"],
+  ppe:["Hard hat","Hi-vis vest","Rigging gloves","Steel/comp-toe boots","Radio"],def:["Hard hat","Hi-vis vest","Rigging gloves"]},
+ {k:"power",name:"Overhead power line proximity",short:"Power lines",fields:[["voltage","Line voltage"],["clearance","Minimum clearance (ft)","10 ft up to 50 kV"],["spotter","Dedicated spotter"],["utility","Utility contacted / lines de-energized?"]],
+  hazards:["Electrocution","Equipment contact with lines","Arcing","Step potential / ground gradient"],
+  ppe:["Hi-vis vest","Hard hat","Dielectric boots"],def:["Hi-vis vest","Hard hat"]},
+ {k:"traffic",name:"Road / lane closure",short:"Lane closure",fields:[["road","Road / location"],["plan","Traffic control plan #"],["flaggers","Certified flaggers"],["hours","Closure hours"]],
+  hazards:["Struck by vehicles","Distracted drivers","Low visibility","Backing equipment"],
+  ppe:["Class 3 hi-vis","Hard hat","Stop/slow paddle","Radio"],def:["Class 3 hi-vis","Hard hat"]},
+ {k:"water",name:"Work over or near water",short:"Water work",fields:[["depth","Water depth"],["rescue","Ring buoy / rescue boat location"],["watch","Water watch person"]],
+  hazards:["Drowning","Slippery banks","Equipment sliding into water","Cold water","Wildlife (snakes, alligators)"],
+  ppe:["Life jacket / PFD","Ring buoy with line","Rubber boots","Waders"],def:["Life jacket / PFD","Ring buoy with line"]},
+ {k:"demo",name:"Demolition",short:"Demolition",fields:[["survey","Engineering survey by"],["utilities","Utilities disconnected?"],["asb","Asbestos / lead survey done?"]],
+  hazards:["Structural collapse","Falling debris","Dust / silica","Asbestos / lead","Hidden utilities","Noise"],
+  ppe:["Hard hat","Respirator","Safety glasses","Hearing protection","Cut-resistant gloves"],def:["Hard hat","Respirator","Safety glasses"]},
+ {k:"chem",name:"Chemical / hazmat use",short:"Chemicals",fields:[["product","Products used"],["sds","SDS reviewed by"],["spill","Spill kit location"]],
+  hazards:["Skin / eye contact","Inhalation","Fire / flammable","Spills","Reactive mixing"],
+  ppe:["Chemical gloves","Chemical goggles","Face shield","Respirator","Chemical apron / suit"],def:["Chemical gloves","Chemical goggles"]},
+ {k:"night",name:"Night work",short:"Night work",fields:[["lighting","Lighting plan"],["hours","Work hours"]],
+  hazards:["Low visibility","Fatigue","Traffic","Trips in the dark"],
+  ppe:["Class 3 hi-vis","Headlamp","Hard hat"],def:["Class 3 hi-vis","Headlamp"]},
+ {k:"general",name:"General safe work permit",short:"General permit",fields:[["desc","Work covered"]],
+  hazards:["Covered in task steps"],ppe:["Hard hat","Safety glasses","Hi-vis vest","Steel/comp-toe boots"],def:["Hard hat","Safety glasses","Hi-vis vest","Steel/comp-toe boots"]}
+];
+const PMAP=Object.fromEntries(PERMITS.map(p=>[p.k,p]));
+const pShort=k=>(PMAP[k]&&(PMAP[k].short||PMAP[k].name))||k;
+function blankPermit(k){ const d=PMAP[k]; return {k,number:"",issuer:"",valid:"",f:{},hazards:[],ppe:[...d.def],photos:[]}; }
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const app=$("#app");
+let db=null, plans=[], unsub=null, view="list", current=null, dbState="connecting", readOnly=false;
+let draft=null;
+
+function riskOf(s){ if(!s) return null; if(s>=15) return "high"; if(s>=8) return "med"; return "low"; }
+const RLABEL={low:"Low",med:"Medium",high:"High"};
+function planRisk(p){ let m=0; (p.steps||[]).forEach(s=>{const v=(+s.sev||0)*(+s.like||0); if(v>m)m=v;}); return m; }
+function fmtDate(d){ if(!d) return ""; const [y,m,dd]=d.split("-"); const dt=new Date(+y,+m-1,+dd); return dt.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}); }
+function today(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function newId(){ const d=today().replace(/-/g,"").slice(2); return "PTP-"+d+"-"+Math.random().toString(36).slice(2,6).toUpperCase(); }
+function blankStep(){ return {task:"",hazard:"",controls:"",sev:"",like:""}; }
+function blankDraft(){ return {id:newId(),project:"",location:"",date:today(),start:"07:00",company:"",foreman:"",competent:"",weather:"",scope:"",equipment:"",steps:[blankStep(),blankStep()],hazards:[],ppe:["Hard hat","Safety glasses","Hi-vis vest","Steel/comp-toe boots"],locate:"",permitList:[],permitsOther:"",emergency:"",photos:[],crew:[{name:"",role:"Foreman",sig:"",at:""},{name:"",role:"",sig:"",at:""}],reviews:blankReviews()}; }
+const STAGES=[
+  {k:"supervisor",label:"Supervisor review",who:"Supervisor",pending:"Awaiting supervisor"},
+  {k:"safety",label:"Safety professional review",who:"Safety professional",pending:"Awaiting safety review"},
+  {k:"gc",label:"GC safety rep review",who:"GC safety rep",pending:"Awaiting GC safety rep",final:true}];
+function blankRev(){ return {name:"",title:"",comments:"",sig:"",at:""}; }
+function blankReviews(){ return {supervisor:blankRev(),safety:blankRev(),gc:blankRev()}; }
+function reviewsOf(p){ const r=p.reviews||{}; const sup=r.supervisor||{name:p.reviewer||"",title:"",comments:"",sig:p.reviewSig||"",at:p.reviewAt||""}; return {supervisor:{...blankRev(),...sup},safety:{...blankRev(),...(r.safety||{})},gc:{...blankRev(),...(r.gc||{})}}; }
+function nextStage(p){ const r=reviewsOf(p); return STAGES.find(s=>!r[s.k].sig)||null; }
+function statusPill(p){ const n=nextStage(p); return n?`<span class="pill med">${n.pending}</span>`:`<span class="pill low">Approved</span>`; }
+
+function setStatus(t){ $("#status").textContent=t; }
+function setTab(v){ view=v; $("#tab-list").setAttribute("aria-pressed",v==="list"||v==="report"); $("#tab-new").setAttribute("aria-pressed",v==="new"); render(); window.scrollTo(0,0); }
+$("#tab-list").onclick=()=>setTab("list");
+$("#tab-new").onclick=()=>{ if(!draft) draft=blankDraft(); setTab("new"); };
+
+function render(){ if(view==="list") renderList(); else if(view==="new") renderForm(); else renderReport(); }
+
+/* ---------- list ---------- */
+let q="";
+function renderList(){
+  const term=q.trim().toLowerCase();
+  const rows=plans.filter(p=>!term||[p.project,p.location,p.foreman,p.scope,p.company,p.id,...(p.permitList||[]).map(x=>(PMAP[x.k]||{}).name)].join(" ").toLowerCase().includes(term));
+  const todayCount=plans.filter(p=>p.date===today()).length;
+  const highCount=plans.filter(p=>riskOf(planRisk(p))==="high").length;
+  const unsigned=plans.filter(p=>(p.crew||[]).some(c=>c.name&&!c.sig)).length;
+  const awaiting=plans.filter(p=>nextStage(p)).length;
+  app.innerHTML=`
+  <div class="listhead"><h2>Plan log</h2>
+    <input class="search" id="q" type="search" placeholder="Search project, foreman, scope…" value="${esc(q)}" aria-label="Search plans">
+    <button class="btn primary" id="go-new" ${readOnly?"disabled":""}>+ New plan</button></div>
+  <div class="stats">
+    <span class="pill neutral">${plans.length} plan${plans.length===1?"":"s"}</span>
+    <span class="pill neutral">${todayCount} today</span>
+    ${highCount?`<span class="pill high">${highCount} high-risk</span>`:""}
+    ${unsigned?`<span class="pill med">${unsigned} missing crew signatures</span>`:""}
+    ${awaiting?`<span class="pill med">${awaiting} awaiting review</span>`:""}
+  </div>
+  <div class="plans">${rows.length?rows.map(p=>{
+    const r=riskOf(planRisk(p)); const crew=(p.crew||[]).filter(c=>c.name); const signedN=crew.filter(c=>c.sig).length;
+    return `<button class="plan" data-id="${esc(p._doc)}">
+      <div><div class="t">${esc(p.project||"Untitled project")}${p.location?` · ${esc(p.location)}`:""}</div></div>
+      <div class="right">${r?`<span class="pill ${r}">${RLABEL[r]} risk · ${planRisk(p)}</span>`:`<span class="pill neutral">Not scored</span>`}${statusPill(p)}</div>
+      <div class="meta"><span>${esc(fmtDate(p.date))}</span><span>Foreman: ${esc(p.foreman||"—")}</span><span>${signedN}/${crew.length} signed</span>${(p.permitList||[]).length?`<span>Permits: ${esc(p.permitList.map(x=>pShort(x.k)).join(", "))}</span>`:""}${p.example?`<span class="pill neutral">Example</span>`:""}<span class="mono">${esc(p.id||"")}</span></div>
+    </button>`;}).join(""):`<div class="empty">${plans.length?"No plans match that search.":(dbState==="connecting"?"Loading plans…":"No plans yet. Start one with <b>New plan</b>.")}</div>`}</div>`;
+  $("#q").oninput=e=>{q=e.target.value; const pos=e.target.selectionStart; renderList(); const el=$("#q"); el.focus(); el.setSelectionRange(pos,pos);};
+  $("#go-new").onclick=()=>{ if(!draft) draft=blankDraft(); setTab("new"); };
+  app.querySelectorAll(".plan").forEach(b=>b.onclick=()=>openReport(b.dataset.id));
+}
+
+/* ---------- form ---------- */
+function field(key,label,type="text",opts={}){
+  const v=draft[key]??"";
+  const id="f-"+key;
+  if(type==="textarea") return `<div class="f" style="${opts.full?"grid-column:1/-1":""}"><label class="label ${opts.req?"req":""}" for="${id}">${label}</label><textarea id="${id}" data-k="${key}" placeholder="${esc(opts.ph||"")}">${esc(v)}</textarea></div>`;
+  return `<div class="f" style="${opts.full?"grid-column:1/-1":""}"><label class="label ${opts.req?"req":""}" for="${id}">${label}</label><input id="${id}" data-k="${key}" type="${type}" value="${esc(v)}" placeholder="${esc(opts.ph||"")}"></div>`;
+}
+function sel(name,i,val){ return `<select id="st-${name}-${i}" data-step="${i}" data-sk="${name}"><option value="">–</option>${[1,2,3,4,5].map(n=>`<option ${+val===n?"selected":""}>${n}</option>`).join("")}</select>`; }
+function photoBlock(arr,g){
+  return `<div class="photos">${arr.map((p,i)=>`<div class="ph"><img src="${p.data}" alt="${esc(p.caption||"Photo "+(i+1))}"><input id="ph-cap-${g}-${i}" data-phg="${g}" data-ph="${i}" value="${esc(p.caption)}" placeholder="Caption" aria-label="Photo ${i+1} caption"><button type="button" class="x" data-delphg="${g}" data-delph="${i}">Remove</button></div>`).join("")}
+    <label class="drop" for="phin-${g}"><span><b>+ Add photos</b><br>Tap to choose or take a photo</span><input id="phin-${g}" data-phin="${g}" type="file" accept="image/*" multiple></label></div>`;
+}
+function permitCard(pm,i){
+  const d=PMAP[pm.k];
+  const inp=(id,attrs,label,val,ph)=>`<div class="f"><label class="label" for="${id}">${label}</label><input id="${id}" ${attrs} value="${esc(val||"")}" placeholder="${esc(ph||"")}"></div>`;
+  return `<div class="permit" id="permit-${pm.k}">
+    <div class="phead"><span class="ptag">${esc(pShort(pm.k))}</span><h4>${esc(d.name)}</h4><button type="button" class="btn ghost small danger" data-delpermit="${i}">Remove permit</button></div>
+    <div class="grid">
+      ${inp(`pm-${i}-number`,`data-pm="${i}" data-pk="number"`,"Permit #",pm.number)}
+      ${inp(`pm-${i}-issuer`,`data-pm="${i}" data-pk="issuer"`,"Issued by",pm.issuer)}
+      ${inp(`pm-${i}-valid`,`data-pm="${i}" data-pk="valid"`,"Valid until",pm.valid,"e.g. Today 5:00 pm")}
+      ${d.fields.map(([k,l,ph])=>inp(`pm-${i}-f-${k}`,`data-pm="${i}" data-pf="${k}"`,l,pm.f[k],ph)).join("")}
+    </div>
+    <div class="psub"><span class="label">Hazards for this permit</span>
+      <div class="chips" data-pmlist="${i}:hazards">${d.hazards.map(h=>`<button type="button" class="chip" aria-pressed="${pm.hazards.includes(h)}">${esc(h)}</button>`).join("")}</div></div>
+    <div class="psub"><span class="label">PPE for this permit</span>
+      <div class="chips" data-pmlist="${i}:ppe">${d.ppe.map(h=>`<button type="button" class="chip" aria-pressed="${pm.ppe.includes(h)}">${esc(h)}</button>`).join("")}</div></div>
+    <div class="psub"><span class="label">Photos for this permit</span>${photoBlock(pm.photos,i)}</div>
+  </div>`;
+}
+function photoArr(g){ return g==="g"?draft.photos:draft.permitList[+g].photos; }
+function renderForm(){
+  const d=draft;
+  if(!d.permitList) d.permitList=[];
+  app.innerHTML=`<form id="ptp" novalidate>
+  <section class="sec"><header><h3>Job info</h3><p class="mono">${esc(d.id)}</p></header>
+    <div class="grid">
+      ${field("project","Project / site","text",{req:1,ph:"e.g. Crown Colony, Hole 7"})}
+      ${field("location","Work area on site","text",{ph:"e.g. North fairway drainage"})}
+      ${field("date","Date","date",{req:1})}
+      ${field("start","Start time","time")}
+      ${field("company","Company / crew","text",{ph:"Contractor or sub name"})}
+      ${field("foreman","Foreman / supervisor","text",{req:1})}
+      ${field("competent","Competent person","text",{ph:"Required for excavation, scaffolds"})}
+      ${field("weather","Weather / conditions","text",{ph:"e.g. 91°F, humid, storms after 3pm"})}
+    </div></section>
+
+  <section class="sec"><header><h3>Scope of work</h3><p>What the crew is doing today.</p></header>
+    <div class="grid">${field("scope","Scope","textarea",{req:1,full:1,ph:"Describe today's work in plain words."})}
+    ${field("equipment","Equipment & tools","text",{full:1,ph:"e.g. Excavator, trench box, laser level, skid steer"})}</div></section>
+
+  <section class="sec"><header><h3>Task steps, hazards &amp; controls</h3><p>Rate each step: severity × likelihood, 1–5 each.</p></header>
+    <div class="steps">${d.steps.map((s,i)=>{const sc=(+s.sev||0)*(+s.like||0); const r=riskOf(sc); return `
+      <div class="step">
+        <div class="row1"><span class="num">${String(i+1).padStart(2,"0")}</span><input id="st-task-${i}" data-step="${i}" data-sk="task" value="${esc(s.task)}" placeholder="Task step" aria-label="Task step ${i+1}">
+          ${d.steps.length>1?`<button type="button" class="btn ghost small danger" data-delstep="${i}" aria-label="Remove step ${i+1}">Remove</button>`:""}</div>
+        <div class="row2">
+          <div class="cell"><label class="label" for="st-hazard-${i}">Hazards</label><textarea id="st-hazard-${i}" data-step="${i}" data-sk="hazard" placeholder="What could hurt someone?">${esc(s.hazard)}</textarea></div>
+          <div class="cell"><label class="label" for="st-controls-${i}">Controls</label><textarea id="st-controls-${i}" data-step="${i}" data-sk="controls" placeholder="How the crew will prevent it">${esc(s.controls)}</textarea></div>
+        </div>
+        <div class="row3">
+          <div class="cell"><label class="label" for="st-sev-${i}">Severity</label>${sel("sev",i,s.sev)}</div>
+          <div class="cell"><label class="label" for="st-like-${i}">Likelihood</label>${sel("like",i,s.like)}</div>
+          <div class="score" id="score-${i}">${r?`<span class="pill ${r}">${RLABEL[r]} · ${sc}</span>`:`<span class="pill neutral">Not scored</span>`}</div>
+        </div>
+      </div>`;}).join("")}</div>
+    <div style="margin-top:10px"><button type="button" class="btn small" id="addstep">+ Add step</button></div>
+    <p class="matrixnote">Score 1–6 low · 8–12 medium · 15–25 high. High-risk steps need supervisor review before work starts.</p></section>
+
+  <section class="sec" id="permits-sec"><header><h3>Permits</h3><p>Select every permit this work needs. Each one gets its own details, hazards, PPE and photos.</p></header>
+    <div class="chips" id="ptypes">${PERMITS.map(p=>`<button type="button" class="chip" data-ptype="${p.k}" aria-pressed="${d.permitList.some(x=>x.k===p.k)}">${esc(p.name)}</button>`).join("")}</div>
+    <div class="permits">${d.permitList.map((pm,i)=>permitCard(pm,i)).join("")}</div>
+    <div class="grid" style="margin-top:14px">${field("permitsOther","Other permits not listed","text",{full:1,ph:"e.g. Owner's burn permit, county ROW permit"})}</div></section>
+
+  <section class="sec"><header><h3>Hazards present</h3><p>General site hazards. Permit hazards are recorded in each permit above.</p></header>
+    <div class="chips" data-list="hazards">${HAZARDS.map(h=>`<button type="button" class="chip" aria-pressed="${d.hazards.includes(h)}">${esc(h)}</button>`).join("")}</div></section>
+
+  <section class="sec"><header><h3>PPE required</h3><p>Minimum PPE for everyone on this task.</p></header>
+    <div class="chips" data-list="ppe">${PPE.map(h=>`<button type="button" class="chip" aria-pressed="${d.ppe.includes(h)}">${esc(h)}</button>`).join("")}</div></section>
+
+  <section class="sec"><header><h3>811 &amp; emergency</h3></header>
+    <div class="grid">
+      ${field("locate","811 locate ticket #","text",{ph:"Ticket number"})}
+      ${field("emergency","Emergency plan / muster point","text",{full:1,ph:"Nearest hospital, muster point, who calls 911"})}
+    </div></section>
+
+  <section class="sec"><header><h3>Reference photos</h3><p>General site conditions, utility marks, equipment setup.</p></header>
+    ${photoBlock(d.photos,"g")}</section>
+
+  <section class="sec"><header><h3>Crew sign-on</h3><p>Each person signs that they reviewed this plan.</p></header>
+    <div class="crew">${d.crew.map((c,i)=>`
+      <div class="member">
+        <div class="f"><label class="label" for="cr-name-${i}">Name</label><input id="cr-name-${i}" data-crew="${i}" data-ck="name" value="${esc(c.name)}"></div>
+        <div class="f"><label class="label" for="cr-role-${i}">Role</label><input id="cr-role-${i}" data-crew="${i}" data-ck="role" value="${esc(c.role)}" placeholder="Operator, laborer…"></div>
+        <div class="sigwrap"><span class="label">Signature</span>
+          ${c.sig?`<div class="signed"><img src="${c.sig}" alt="Signature of ${esc(c.name)}"><button type="button" class="btn ghost small" data-sign="${i}">Redo</button></div>`
+                 :`<div class="signed"><button type="button" class="btn small" data-sign="${i}">Sign</button>${d.crew.length>1?`<button type="button" class="btn ghost small danger" data-delcrew="${i}">Remove</button>`:""}</div>`}
+        </div>
+      </div>`).join("")}</div>
+    <div style="margin-top:10px"><button type="button" class="btn small" id="addcrew">+ Add crew member</button></div></section>
+
+  <section class="sec"><header><h3>Review workflow</h3><p>Signed in order after the crew signs on.</p></header>
+    <ol class="chain">${STAGES.map((s,i)=>`<li><span class="dot">${i+1}</span><span><b>${s.label}</b>${s.final?" · final approval":""}</span></li>`).join("")}</ol>
+    <p class="matrixnote" style="margin:0 0 12px">The supervisor can sign now. The safety professional and GC safety rep sign from the saved plan's report.</p>
+    <div class="grid">
+      <div class="f"><label class="label" for="rv-name">Supervisor name</label><input id="rv-name" data-rv="name" value="${esc(d.reviews.supervisor.name)}"></div>
+      <div class="f"><label class="label" for="rv-title">Title</label><input id="rv-title" data-rv="title" value="${esc(d.reviews.supervisor.title)}" placeholder="e.g. Superintendent"></div>
+      <div class="f" style="grid-column:1/-1"><label class="label" for="rv-comments">Comments</label><textarea id="rv-comments" data-rv="comments" style="min-height:60px">${esc(d.reviews.supervisor.comments)}</textarea></div>
+      <div class="sigwrap"><span class="label">Supervisor signature</span>
+        ${d.reviews.supervisor.sig?`<div class="signed"><img src="${d.reviews.supervisor.sig}" alt="Supervisor signature"><button type="button" class="btn ghost small" data-sign="review">Redo</button></div>`:`<div><button type="button" class="btn small" data-sign="review">Sign</button></div>`}
+      </div></div></section>
+
+  <div class="formacts"><span class="msg" id="formmsg"></span>
+    <button type="button" class="btn ghost" id="discard">Discard</button>
+    <button type="submit" class="btn primary" id="save" ${readOnly?"disabled":""}>Save plan</button></div>
+  </form>`;
+  bindForm();
+}
+function bindForm(){
+  const f=$("#ptp");
+  f.addEventListener("input",e=>{
+    const t=e.target;
+    if(t.dataset.k){ draft[t.dataset.k]=t.value; }
+    else if(t.dataset.sk){ draft.steps[+t.dataset.step][t.dataset.sk]=t.value; if(t.dataset.sk==="sev"||t.dataset.sk==="like"){ const i=+t.dataset.step; const s=draft.steps[i]; const sc=(+s.sev||0)*(+s.like||0); const r=riskOf(sc); $("#score-"+i).innerHTML=r?`<span class="pill ${r}">${RLABEL[r]} · ${sc}</span>`:`<span class="pill neutral">Not scored</span>`; } }
+    else if(t.dataset.ck){ draft.crew[+t.dataset.crew][t.dataset.ck]=t.value; }
+    else if(t.dataset.ph){ photoArr(t.dataset.phg)[+t.dataset.ph].caption=t.value; }
+    else if(t.dataset.pm!==undefined && t.dataset.pk){ draft.permitList[+t.dataset.pm][t.dataset.pk]=t.value; }
+    else if(t.dataset.pm!==undefined && t.dataset.pf){ draft.permitList[+t.dataset.pm].f[t.dataset.pf]=t.value; }
+    else if(t.dataset.rv){ draft.reviews.supervisor[t.dataset.rv]=t.value; }
+  });
+  f.addEventListener("change",e=>{ if(e.target.dataset.sk) f.dispatchEvent(new Event("input")); });
+  f.querySelectorAll("select[data-sk]").forEach(s=>s.addEventListener("change",()=>{ s.dispatchEvent(new Event("input",{bubbles:true})); }));
+  $("#ptypes").addEventListener("click",e=>{
+    const b=e.target.closest("[data-ptype]"); if(!b) return; const k=b.dataset.ptype;
+    if(!draft.permitList.some(x=>x.k===k)){ draft.permitList.push(blankPermit(k)); renderForm(); }
+    const card=$("#permit-"+k); if(card){ card.scrollIntoView({block:"start",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); const first=card.querySelector("input"); if(first) first.focus({preventScroll:true}); }
+  });
+  f.querySelectorAll("[data-delpermit]").forEach(b=>{ let armed=false; b.onclick=()=>{ if(!armed){ armed=true; b.textContent="Tap again to remove"; setTimeout(()=>{armed=false; if(b.isConnected) b.textContent="Remove permit";},3000); return;} draft.permitList.splice(+b.dataset.delpermit,1); renderForm(); }; });
+  f.querySelectorAll(".chips[data-list],.chips[data-pmlist]").forEach(box=>box.addEventListener("click",e=>{
+    const b=e.target.closest(".chip"); if(!b) return; let list;
+    if(box.dataset.list) list=draft[box.dataset.list]; else { const [i,key]=box.dataset.pmlist.split(":"); list=draft.permitList[+i][key]; }
+    const v=b.textContent;
+    const on=b.getAttribute("aria-pressed")!=="true"; b.setAttribute("aria-pressed",on);
+    if(on){ if(!list.includes(v)) list.push(v);} else { const i=list.indexOf(v); if(i>-1) list.splice(i,1);} }));
+  $("#addstep").onclick=()=>{ draft.steps.push(blankStep()); renderForm(); $("#st-task-"+(draft.steps.length-1)).focus(); };
+  $("#addcrew").onclick=()=>{ draft.crew.push({name:"",role:"",sig:"",at:""}); renderForm(); $("#cr-name-"+(draft.crew.length-1)).focus(); };
+  f.querySelectorAll("[data-delstep]").forEach(b=>b.onclick=()=>{ draft.steps.splice(+b.dataset.delstep,1); renderForm(); });
+  f.querySelectorAll("[data-delcrew]").forEach(b=>b.onclick=()=>{ draft.crew.splice(+b.dataset.delcrew,1); renderForm(); });
+  f.querySelectorAll("[data-delph]").forEach(b=>b.onclick=()=>{ photoArr(b.dataset.delphg).splice(+b.dataset.delph,1); renderForm(); });
+  f.querySelectorAll("[data-sign]").forEach(b=>b.onclick=()=>{
+    const t=b.dataset.sign;
+    if(t==="review") openSig(draft.reviews.supervisor.name||"Supervisor",(data,at)=>{ draft.reviews.supervisor.sig=data; draft.reviews.supervisor.at=at; renderForm(); });
+    else openSig(draft.crew[+t].name||"Crew member "+(+t+1),(data,at)=>{ draft.crew[+t].sig=data; draft.crew[+t].at=at; renderForm(); });
+  });
+  f.querySelectorAll("[data-phin]").forEach(inp=>inp.onchange=async e=>{ const arr=photoArr(inp.dataset.phin); const files=[...e.target.files]; const msg=$("#formmsg"); msg.className="msg"; msg.textContent="Adding photos…";
+    let bad=""; for(const file of files){ try{ arr.push({data:await shrink(file),caption:""}); }catch(err){ bad=file.name; } }
+    renderForm(); const m=$("#formmsg"); if(bad){ m.className="msg err"; m.textContent="Couldn't read "+bad+". Try a JPG or PNG."; } });
+  let armed=false;
+  $("#discard").onclick=e=>{ if(!armed){ armed=true; e.target.textContent="Tap again to discard"; setTimeout(()=>{armed=false; if(e.target.isConnected) e.target.textContent="Discard";},3000); return;} draft=null; setTab("list"); };
+  f.onsubmit=e=>{ e.preventDefault(); savePlan(); };
+}
+function shrink(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onerror=rej; r.onload=()=>{ const img=new Image(); img.onerror=rej; img.onload=()=>{
+  let max=1100, q=.7, out=""; for(let k=0;k<4;k++){ const sc=Math.min(1,max/Math.max(img.width,img.height)); const c=document.createElement("canvas"); c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc); c.getContext("2d").drawImage(img,0,0,c.width,c.height); out=c.toDataURL("image/jpeg",q); if(out.length<180000) break; max=Math.round(max*.75); q-=.1; }
+  res(out); }; img.src=r.result; }; r.readAsDataURL(file); }); }
+
+/* ---------- signature pad ---------- */
+let sigCb=null, drawing=false, hasInk=false;
+const cv=$("#sigcanvas"), cx=cv.getContext("2d");
+function openSig(name,cb){ sigCb=cb; $("#signame").textContent=name; cx.fillStyle="#fff"; cx.fillRect(0,0,cv.width,cv.height); hasInk=false; $("#sigpad").hidden=false; }
+function pos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]; }
+cv.addEventListener("pointerdown",e=>{ drawing=true; cv.setPointerCapture(e.pointerId); const [x,y]=pos(e); cx.beginPath(); cx.moveTo(x,y); });
+cv.addEventListener("pointermove",e=>{ if(!drawing) return; const [x,y]=pos(e); cx.lineTo(x,y); cx.strokeStyle="#111"; cx.lineWidth=5; cx.lineCap="round"; cx.lineJoin="round"; cx.stroke(); hasInk=true; });
+cv.addEventListener("pointerup",()=>drawing=false); cv.addEventListener("pointercancel",()=>drawing=false);
+$("#sigclear").onclick=()=>{ cx.fillStyle="#fff"; cx.fillRect(0,0,cv.width,cv.height); hasInk=false; };
+$("#sigcancel").onclick=()=>{ $("#sigpad").hidden=true; };
+$("#sigsave").onclick=()=>{ if(!hasInk){ $("#signame").textContent="Draw a signature first"; return; }
+  const s=document.createElement("canvas"); s.width=400; s.height=144; const sx=s.getContext("2d"); sx.drawImage(cv,0,0,400,144); const data=s.toDataURL("image/png"); const at=new Date().toISOString();
+  $("#sigpad").hidden=true; if(sigCb) sigCb(data,at); };
+
+/* ---------- save ---------- */
+async function savePlan(){
+  const msg=$("#formmsg"); msg.className="msg err";
+  const missing=[]; if(!draft.project.trim()) missing.push("project"); if(!draft.date) missing.push("date"); if(!draft.foreman.trim()) missing.push("foreman"); if(!draft.scope.trim()) missing.push("scope of work");
+  if(missing.length){ msg.textContent="Add the "+missing.join(", ")+" before saving."; return; }
+  const high=draft.steps.some(s=>riskOf((+s.sev||0)*(+s.like||0))==="high");
+  if(high && !draft.reviews.supervisor.sig){ msg.textContent="A high-risk step needs a supervisor signature before saving."; return; }
+  const {photos:gPhotos,permitList,...rest}=draft;
+  const photos=[...gPhotos.map(p=>({...p,group:""}))];
+  const plist=permitList.map(pm=>{ const {photos:pp,...pr}=pm; pp.forEach(p=>photos.push({...p,group:pm.k})); return {...pr,photoCount:pp.length}; });
+  const body={...rest, permitList:plist, steps:draft.steps.filter(s=>s.task||s.hazard||s.controls), crew:draft.crew.filter(c=>c.name||c.sig), photoCount:photos.length, createdAt:new Date().toISOString()};
+  $("#save").disabled=true; msg.className="msg"; msg.textContent="Saving…";
+  try{
+    if(db){
+      const ref=db.collection("ptps").doc(draft.id);
+      await ref.set(body);
+      for(let i=0;i<photos.length;i++){ await ref.collection("photos").doc("p"+i).set({data:photos[i].data,caption:photos[i].caption||"",order:i,group:photos[i].group}); }
+    } else {
+      plans.unshift({...body,_doc:draft.id,_localPhotos:photos});
+    }
+    const id=draft.id; draft=null; current=id; view="report"; $("#tab-new").setAttribute("aria-pressed","false"); $("#tab-list").setAttribute("aria-pressed","true");
+    if(!db) renderReport(); else { renderReport(); }
+    window.scrollTo(0,0);
+  }catch(err){
+    $("#save").disabled=false; msg.className="msg err";
+    msg.textContent= err&&err.code==="invalid_argument" ? "You don't have permission to save plans here. Ask the owner for Contributor access." : err&&err.code==="quota_exceeded" ? "The plan log is full. Delete old plans to make room." : "Couldn't save. Check your connection and try again.";
+  }
+}
+
+/* ---------- report ---------- */
+let photoCache={};
+async function openReport(id){ current=id; view="report"; render(); window.scrollTo(0,0); }
+async function loadPhotos(id){
+  const p=plans.find(x=>x._doc===id); if(p&&p._localPhotos) return p._localPhotos;
+  if(photoCache[id]) return photoCache[id];
+  if(!db) return [];
+  try{ const s=await db.collection("ptps").doc(id).collection("photos").orderBy("order").get(); photoCache[id]=s.docs.map(d=>d.data()); return photoCache[id]; }catch(e){ return []; }
+}
+function renderReport(){
+  const p=plans.find(x=>x._doc===current);
+  if(!p){ app.innerHTML=`<div class="back"><button class="btn ghost" id="bk">← All plans</button></div><div class="empty" style="margin-top:14px">Loading plan…</div>`; $("#bk").onclick=()=>setTab("list"); return; }
+  const mx=planRisk(p), r=riskOf(mx); const crew=p.crew||[];
+  app.innerHTML=`<div class="back"><button class="btn ghost" id="bk">← All plans</button></div>
+  <article class="report">
+    <div class="rhead"><span class="id">${esc(p.id)}${p.example?" · Example plan":""}</span>
+      <h2>${esc(p.project)}${p.location?` · ${esc(p.location)}`:""}</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${r?`<span class="pill ${r}">Highest risk: ${RLABEL[r]} · ${mx}</span>`:""}<span class="pill neutral">${crew.filter(c=>c.sig).length}/${crew.length} crew signed</span>${statusPill(p)}</div>
+    </div>
+    <div class="rbody">
+      <div class="kv">
+        <div><span class="label">Date</span><b>${esc(fmtDate(p.date))}${p.start?` · ${esc(p.start)}`:""}</b></div>
+        <div><span class="label">Foreman</span><b>${esc(p.foreman)}</b></div>
+        <div><span class="label">Company / crew</span><b>${esc(p.company||"—")}</b></div>
+        <div><span class="label">Competent person</span><b>${esc(p.competent||"—")}</b></div>
+        <div><span class="label">Weather</span><b>${esc(p.weather||"—")}</b></div>
+        <div><span class="label">811 ticket</span><b class="mono">${esc(p.locate||"—")}</b></div>
+      </div>
+      <div class="rsec"><h3>Scope of work</h3><p style="margin:0;white-space:pre-wrap">${esc(p.scope)}</p>${p.equipment?`<p class="muted" style="margin:.5em 0 0"><b>Equipment:</b> ${esc(p.equipment)}</p>`:""}</div>
+      <div class="rsec"><h3>Task steps, hazards &amp; controls</h3><div class="tablewrap"><table>
+        <thead><tr><th>#</th><th>Task step</th><th>Hazards</th><th>Controls</th><th>Risk</th></tr></thead>
+        <tbody>${(p.steps||[]).map((s,i)=>{const sc=(+s.sev||0)*(+s.like||0); const rr=riskOf(sc); return `<tr><td class="n">${i+1}</td><td>${esc(s.task)}</td><td>${esc(s.hazard)}</td><td>${esc(s.controls)}</td><td class="n">${rr?`<span class="pill ${rr}">${sc}</span><br><span class="muted" style="font-size:12px">S${s.sev} × L${s.like}</span>`:"—"}</td></tr>`;}).join("")||`<tr><td colspan="5" class="muted">No steps listed.</td></tr>`}</tbody></table></div></div>
+      <div class="kv">
+        <div style="grid-column:1/-1"><span class="label">Hazards present</span><div class="chips" style="margin-top:4px">${(p.hazards||[]).map(h=>`<span class="pill neutral">${esc(h)}</span>`).join("")||"—"}</div></div>
+        <div style="grid-column:1/-1"><span class="label">PPE required</span><div class="chips" style="margin-top:4px">${(p.ppe||[]).map(h=>`<span class="pill neutral">${esc(h)}</span>`).join("")||"—"}</div></div>
+        <div><span class="label">Emergency plan</span><b>${esc(p.emergency||"—")}</b></div>
+      </div>
+      <div class="rsec"><h3>Permits</h3>${renderPermitsReport(p)}</div>
+      <div class="rsec"><h3>Reference photos</h3><div class="rphotos" data-group="">${generalPhotoCount(p)?`<span class="muted">Loading photos…</span>`:`<span class="muted">No general photos attached.</span>`}</div></div>
+      <div class="rsec"><h3>Crew sign-on</h3><div class="sigs">${crew.map(c=>`<div class="sig"><b>${esc(c.name||"—")}</b><span class="muted" style="font-size:13px">${esc(c.role||"")}</span>${c.sig?`<img src="${c.sig}" alt="Signature of ${esc(c.name)}"><span class="muted" style="font-size:12px">Signed ${c.at?new Date(c.at).toLocaleString():""}</span>`:`<div class="none">Not signed</div>`}</div>`).join("")||`<span class="muted">No crew listed.</span>`}</div></div>
+      <div class="rsec"><h3>Review workflow</h3><div class="stages">${renderStages(p)}</div></div>
+    </div>
+    <div class="ractions">
+      <button class="btn" id="dup" ${readOnly?"disabled":""}>Reuse as today's plan</button>
+      <button class="btn" id="copy">Copy text summary</button>
+      <span class="msg" id="rmsg"></span>
+      <button class="btn ghost danger" id="del" ${readOnly||!db?"hidden":""}>Delete plan</button>
+    </div>
+  </article>`;
+  $("#bk").onclick=()=>setTab("list");
+  $("#dup").onclick=()=>{ const {_doc,_localPhotos,createdAt,photoCount,example,...rest}=p; draft={...blankDraft(),...JSON.parse(JSON.stringify(rest)),id:newId(),date:today(),photos:[],reviews:blankReviews(),reviewer:undefined,reviewSig:undefined,reviewAt:undefined,permitList:(rest.permitList||[]).map(({photoCount,...pm})=>({...pm,f:{...(pm.f||{})},number:"",valid:"",photos:[]})),crew:(rest.crew||[]).map(c=>({name:c.name,role:c.role,sig:"",at:""}))}; setTab("new"); };
+  $("#copy").onclick=async()=>{ const t=summary(p); try{ await navigator.clipboard.writeText(t); $("#rmsg").textContent="Summary copied."; }catch(e){ $("#rmsg").textContent="Copy blocked here. Select the report text instead."; } };
+  let armed=false;
+  $("#del").onclick=async e=>{ if(!armed){ armed=true; e.target.textContent="Tap again to delete"; setTimeout(()=>{armed=false; if(e.target.isConnected) e.target.textContent="Delete plan";},3000); return; }
+    try{ const ref=db.collection("ptps").doc(p._doc); for(let i=0;i<(p.photoCount||0);i++){ await ref.collection("photos").doc("p"+i).delete(); } await ref.delete(); setTab("list"); }catch(err){ $("#rmsg").textContent="Couldn't delete this plan."; } };
+  bindStages(p);
+  if(p.photoCount){ loadPhotos(p._doc).then(ph=>{
+    app.querySelectorAll(".rphotos[data-group]").forEach(el=>{ const g=el.dataset.group; const mine=ph.filter(x=>(x.group||"")===g);
+      if(!mine.length){ if(el.querySelector(".muted")&&/Loading/.test(el.textContent)) el.innerHTML=`<span class="muted">Photos unavailable.</span>`; return; }
+      el.innerHTML=mine.map((x,i)=>`<figure><img src="${x.data}" alt="${esc(x.caption||"Photo "+(i+1))}"><figcaption>${esc(x.caption||"")}</figcaption></figure>`).join(""); });
+  }); }
+}
+function generalPhotoCount(p){ const pc=(p.permitList||[]).reduce((a,x)=>a+(x.photoCount||0),0); return Math.max(0,(p.photoCount||0)-pc); }
+function renderPermitsReport(p){
+  const list=p.permitList||[]; const legacy=typeof p.permits==="string"&&p.permits&&p.permits!=="None"?p.permits:"";
+  const other=[p.permitsOther,legacy].filter(Boolean).join("; ");
+  if(!list.length) return `<p class="muted" style="margin:0">No permits selected.${other?` Other: ${esc(other)}`:""}</p>`;
+  return `<div class="rpermits">${list.map(pm=>{ const d=PMAP[pm.k]||{name:pm.k,fields:[]};
+    const kv=[["Permit #",pm.number],["Issued by",pm.issuer],["Valid until",pm.valid],...d.fields.map(([k,l])=>[l,(pm.f||{})[k]])];
+    return `<div class="rpermit"><div class="phead"><span class="ptag">${esc(pShort(pm.k))}</span><h4>${esc(d.name)}</h4></div>
+      <div class="kv">${kv.map(([l,v])=>`<div><span class="label">${esc(l)}</span><b>${esc(v||"—")}</b></div>`).join("")}</div>
+      <div><span class="label">Hazards</span><div class="chips" style="margin-top:4px">${(pm.hazards||[]).map(h=>`<span class="pill high">${esc(h)}</span>`).join("")||"—"}</div></div>
+      <div><span class="label">PPE</span><div class="chips" style="margin-top:4px">${(pm.ppe||[]).map(h=>`<span class="pill neutral">${esc(h)}</span>`).join("")||"—"}</div></div>
+      <div><span class="label">Photos</span><div class="rphotos" data-group="${esc(pm.k)}" style="margin-top:4px">${pm.photoCount?`<span class="muted">Loading photos…</span>`:`<span class="muted">No photos for this permit.</span>`}</div></div>
+    </div>`; }).join("")}</div>${other?`<p class="muted" style="margin:10px 0 0"><b>Other permits:</b> ${esc(other)}</p>`:""}`;
+}
+let stageSig={};
+function renderStages(p){
+  const r=reviewsOf(p); const next=nextStage(p); const crewOk=(p.crew||[]).length>0 && (p.crew||[]).every(c=>c.sig);
+  return STAGES.map((s,i)=>{
+    const v=r[s.k];
+    if(v.sig) return `<div class="stage done"><div class="sh"><span class="dot">${i+1}</span><b>${s.label}</b><span class="pill low">Approved</span></div>
+      <div class="kv"><div><span class="label">Name</span><b>${esc(v.name||"—")}</b></div><div><span class="label">Title</span><b>${esc(v.title||"—")}</b></div><div><span class="label">Date</span><b>${v.at?esc(new Date(v.at).toLocaleString()):"—"}</b></div></div>
+      ${v.comments?`<p class="cm">${esc(v.comments)}</p>`:""}<img class="ssig" src="${v.sig}" alt="${esc(s.who)} signature"></div>`;
+    if(next&&next.k===s.k&&!readOnly){ const d=stageSig[p._doc+s.k]||{};
+      return `<div class="stage open"><div class="sh"><span class="dot">${i+1}</span><b>${s.label}</b><span class="pill med">Ready to sign</span></div>
+      ${!crewOk?`<p class="cm warn">Not every crew member has signed yet. You can still review, but the crew sign-on is incomplete.</p>`:""}
+      <div class="grid">
+        <div class="f"><label class="label req" for="sg-name">Name</label><input id="sg-name" value="${esc(d.name||"")}"></div>
+        <div class="f"><label class="label" for="sg-title">Title</label><input id="sg-title" value="${esc(d.title||"")}" placeholder="${s.k==="gc"?"e.g. GC Safety Manager":s.k==="safety"?"e.g. Safety Manager":"e.g. Superintendent"}"></div>
+        <div class="f" style="grid-column:1/-1"><label class="label" for="sg-comments">Comments</label><textarea id="sg-comments" style="min-height:60px" placeholder="Conditions of approval, corrections, notes">${esc(d.comments||"")}</textarea></div>
+      </div>
+      <div class="sacts">${d.sig?`<img class="ssig" src="${d.sig}" alt="Your signature">`:""}<button class="btn small" id="sg-sign" type="button">${d.sig?"Redo signature":"Sign"}</button><button class="btn primary small" id="sg-approve" type="button">Approve${s.final?" (final)":""}</button><span class="msg" id="sg-msg"></span></div></div>`; }
+    return `<div class="stage wait"><div class="sh"><span class="dot">${i+1}</span><b>${s.label}</b><span class="pill neutral">${next?"Waiting on "+next.who.toLowerCase():"—"}</span></div></div>`;
+  }).join("");
+}
+function bindStages(p){
+  const next=nextStage(p); if(!next||!$("#sg-approve")) return;
+  const key=p._doc+next.k; const st=stageSig[key]=stageSig[key]||{};
+  ["name","title","comments"].forEach(f=>$("#sg-"+f).oninput=e=>{st[f]=e.target.value;});
+  $("#sg-sign").onclick=()=>openSig((st.name||next.who),(data,at)=>{ st.sig=data; st.at=at; renderReport(); });
+  $("#sg-approve").onclick=async()=>{
+    const m=$("#sg-msg"); m.className="msg err";
+    if(!(st.name||"").trim()){ m.textContent="Add your name."; return; }
+    if(!st.sig){ m.textContent="Sign before approving."; return; }
+    const rev={name:st.name.trim(),title:(st.title||"").trim(),comments:(st.comments||"").trim(),sig:st.sig,at:st.at||new Date().toISOString()};
+    $("#sg-approve").disabled=true; m.className="msg"; m.textContent="Saving…";
+    try{
+      const all=reviewsOf(p); all[next.k]=rev;
+      if(db){ await db.collection("ptps").doc(p._doc).update({reviews:all}); }
+      else { p.reviews=all; }
+      delete stageSig[key]; renderReport();
+    }catch(err){ $("#sg-approve").disabled=false; m.className="msg err"; m.textContent=err&&err.code==="invalid_argument"?"You don't have permission to sign here. Ask the owner for Contributor access.":"Couldn't save the approval. Try again."; }
+  };
+}
+function summary(p){
+  const L=[]; L.push(`PRE-TASK PLAN ${p.id}`); L.push(`${p.project}${p.location?" – "+p.location:""}`); L.push(`${fmtDate(p.date)} ${p.start||""} | Foreman: ${p.foreman}`);
+  L.push("",`SCOPE: ${p.scope}`); if(p.equipment) L.push(`EQUIPMENT: ${p.equipment}`);
+  L.push("","STEPS:"); (p.steps||[]).forEach((s,i)=>{ const sc=(+s.sev||0)*(+s.like||0); L.push(`${i+1}. ${s.task} | Hazard: ${s.hazard} | Controls: ${s.controls}${sc?` | Risk ${sc}`:""}`); });
+  L.push("",`HAZARDS: ${(p.hazards||[]).join(", ")||"—"}`,`PPE: ${(p.ppe||[]).join(", ")||"—"}`,`811 TICKET: ${p.locate||"—"}`,`EMERGENCY: ${p.emergency||"—"}`);
+  const pl=p.permitList||[];
+  if(pl.length){ L.push("","PERMITS:"); pl.forEach(pm=>{ const d=PMAP[pm.k]||{name:pm.k,fields:[]};
+    L.push(`- ${d.name}${pm.number?" #"+pm.number:""}${pm.issuer?", issued by "+pm.issuer:""}${pm.valid?", valid until "+pm.valid:""}`);
+    const fl=d.fields.map(([k,l])=>(pm.f||{})[k]?`${l}: ${pm.f[k]}`:"").filter(Boolean); if(fl.length) L.push("  "+fl.join(" | "));
+    if((pm.hazards||[]).length) L.push("  Hazards: "+pm.hazards.join(", "));
+    if((pm.ppe||[]).length) L.push("  PPE: "+pm.ppe.join(", ")); }); }
+  if(p.permitsOther) L.push(`OTHER PERMITS: ${p.permitsOther}`);
+  L.push("",`CREW: ${(p.crew||[]).map(c=>`${c.name}${c.sig?" (signed)":" (NOT signed)"}`).join(", ")}`,"","REVIEWS:");
+  const rv=reviewsOf(p); STAGES.forEach(s=>{ const v=rv[s.k]; L.push(`${s.label}: ${v.sig?`${v.name}${v.title?", "+v.title:""} – approved ${v.at?new Date(v.at).toLocaleString():""}${v.comments?" – "+v.comments:""}`:"PENDING"}`); });
+  L.push("",`STATUS: ${nextStage(p)?nextStage(p).pending:"Approved"}`);
+  return L.join("\n");
+}
+
+/* ---------- boot ---------- */
+render();
+(async()=>{
+  const cfg=window.XSARAH_CONFIG||{};
+  if(!window.supabase||!cfg.supabaseUrl||cfg.supabaseUrl.includes("PASTE")){ dbState="local"; setStatus("Setup needed: add your Supabase URL and publishable key to config.js."); render(); return; }
+  const sb=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseKey);
+  window.__sb=sb;
+  let session=(await sb.auth.getSession()).data.session;
+  sb.auth.onAuthStateChange((ev,s)=>{ const was=!!session; session=s; if(!!s!==was) location.reload(); });
+  if(!session){ showLogin(sb); return; }
+  db=makeDb(sb);
+  const who=session.user.email||"";
+  setStatus("Signed in as "+who+" · shared plan log");
+  const st=$("#status"); const so=document.createElement("button"); so.className="btn ghost small"; so.style.marginLeft="8px"; so.textContent="Sign out"; so.onclick=()=>sb.auth.signOut(); st.appendChild(so);
+  unsub=db.collection("ptps").orderBy("createdAt","desc").limit(300).onSnapshot(s=>{
+    dbState="live"; plans=s.docs.map(d=>({...d.data(),_doc:d.id}));
+    if(view==="list"||view==="report") render();
+  },err=>{ dbState="error"; setStatus("Lost connection to the plan log. Reload to reconnect."); });
+})();
+
+function showLogin(sb){
+  $("#tab-list").parentElement.hidden=true;
+  setStatus("");
+  app.innerHTML=`<section class="sec" style="max-width:440px;margin:40px auto 0">
+    <header><h3>Sign in to XSarah</h3></header>
+    <p class="muted" style="margin-top:0">Enter your work email. We'll email you a sign-in link.</p>
+    <form id="login" class="grid" style="grid-template-columns:1fr">
+      <div class="f"><label class="label" for="em">Email</label><input id="em" type="email" autocomplete="email" required placeholder="you@company.com"></div>
+      <button class="btn primary" type="submit" id="lg">Email me a sign-in link</button>
+      <span class="msg" id="lmsg"></span>
+    </form></section>`;
+  $("#login").onsubmit=async e=>{ e.preventDefault(); const em=$("#em").value.trim(); const m=$("#lmsg"); if(!em){ return; }
+    $("#lg").disabled=true; m.className="msg"; m.textContent="Sending…";
+    const {error}=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin}});
+    if(error){ $("#lg").disabled=false; m.className="msg err"; m.textContent="Couldn't send the link: "+error.message; }
+    else { m.textContent="Check your email and tap the link on this device. You can close this screen."; } };
+}
+
+/* Supabase-backed store with the same small API the app uses */
+function makeDb(sb){
+  const listeners=[]; let timer=null;
+  const wrap=e=>{ const code=(e&&(e.code==="42501"||/row-level security/i.test(e.message||"")))?"invalid_argument":"unavailable"; return {code,message:e&&e.message}; };
+  async function refresh(){
+    if(!listeners.length) return;
+    const {data,error}=await sb.from("ptps").select("id,data").order("created_at",{ascending:false}).limit(300);
+    if(error){ listeners.forEach(l=>l.err&&l.err(wrap(error))); return; }
+    const snap={docs:data.map(r=>({id:r.id,exists:true,data:()=>r.data}))};
+    listeners.forEach(l=>l.next(snap));
+  }
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refresh(); });
+  function photosOf(planId){ return {
+    doc:pid=>({
+      set:async d=>{ const {error}=await sb.from("ptp_photos").upsert({id:planId+"_"+pid,plan_id:planId,ord:d.order||0,data:d}); if(error) throw wrap(error); },
+      delete:async()=>{ const {error}=await sb.from("ptp_photos").delete().eq("id",planId+"_"+pid); if(error) throw wrap(error); } }),
+    orderBy:()=>({ get:async()=>{ const {data,error}=await sb.from("ptp_photos").select("data").eq("plan_id",planId).order("ord"); if(error) throw wrap(error); return {docs:data.map(r=>({data:()=>r.data}))}; } }) }; }
+  function planRef(id){ return {
+    set:async body=>{ const {error}=await sb.from("ptps").upsert({id,data:body,created_at:body.createdAt||new Date().toISOString()}); if(error) throw wrap(error); refresh(); },
+    update:async patch=>{ const {data,error}=await sb.from("ptps").select("data").eq("id",id).single(); if(error) throw wrap(error);
+      const {error:e2}=await sb.from("ptps").update({data:{...data.data,...patch}}).eq("id",id); if(e2) throw wrap(e2); refresh(); },
+    delete:async()=>{ await sb.from("ptp_photos").delete().eq("plan_id",id); const {error}=await sb.from("ptps").delete().eq("id",id); if(error) throw wrap(error); refresh(); },
+    collection:()=>photosOf(id) }; }
+  return { collection:()=>({
+    doc:id=>planRef(id),
+    orderBy:()=>({ limit:()=>({ onSnapshot:(next,err)=>{ const l={next,err}; listeners.push(l); refresh(); if(!timer) timer=setInterval(()=>{ if(!document.hidden) refresh(); },20000); return ()=>{ listeners.splice(listeners.indexOf(l),1); }; } }) }) }) };
+}
+
+if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{})); }
+})();
+</script>
+
+</body>
+</html>
